@@ -1,0 +1,65 @@
+.header {
+    position:fixed;
+    top:0px;
+    display:flex;
+    flex-direction:rows;
+    align-items: flex-start;
+    width:100%;
+    left:0px;
+    justify-content: flex-start;
+}
+
+.navbar {
+    margin-right: 1%;
+    background-color:black;
+    border-radius: 0px 0px 4px 4px;
+    color: white;
+    padding:10px;
+    text-decoration: none;
+}
+
+.navbar:hover:not(.icon) {
+    padding-top: 15px;
+
+}
+
+.navbar.current {
+    background-color: goldenrod;
+    padding:13px;
+}
+
+.navbar.current:hover {
+    padding-top:17px;
+}
+
+.navbar:active {
+    background-color: goldenrod;
+}
+
+.disabled {
+    text-decoration:line-through;
+    cursor: not-allowed;
+    color: grey;
+}
+.navbar.disabled:active {
+    background-color: black;
+    color: red;
+}
+
+.page {
+    margin:70px;
+}
+
+.bottom {
+    position:fixed;
+    bottom:10px;
+    background:white;
+    border-radius:10px;
+}
+
+img.picture {
+    height: 500px;
+}
+img.icon {
+    width: 100px;
+}
