@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | Personal Website</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+
+<div class="header">
+    <a class="navbar home icon" href="/"><img alt="C"></a>
+    <a class="navbar" href="/">Home</a>
+    <a class="navbar" href="/favorites">Favorites</a>
+    <a class="navbar disabled" href="#">Projects</a>
+    <a class="navbar" href="/contact">Contact</a>
+    <a class="navbar current" href="/admin">Admin</a>
+</div>
+
+<div class="page">
+    
+<h1>Admin Page</h1>
+
+<p>
+    This page is for administrative purposes. It is not intended for public use.
+</p>
+
+<form id="addBookForm">
+    <h2> Add a Book</h2>
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" required><br>
+    <label for="author">Author:</label><br>
+    <input type="text" id="author" name="author" required><br>
+    <label for="book_description">Description:</label><br>
+    <textarea id="book_description" name="description" required></textarea><br>
+    <label for="book_image">Image Filename (in images folder):</label><br>
+    <input type="text" id="book_image" name="image" required><br>
+    <label for="link">Link to Book (optional):</label><br>
+    <input type="text" id="link" name="link"><br><br>
+    <input type="submit" value="Add Book">
+</form>
+
+<h2>Existing Books</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Link</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="booksTable"></tbody>
+</table>
+
+<hr>
+
+<form id="addPetForm">
+    <h2> Add a Pet</h2>
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br>
+    <label for="pet_image">Image Filename (in images folder):</label><br>
+    <input type="text" id="pet_image" name="image" required><br><br>
+    <input type="submit" value="Add Pet">
+</form>
+
+
+<h2>Existing Pets</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="petsTable"></tbody>
+</table>
+
+<div class="bottom">
+    <p>
+        Copyright 2025.
+        This website does not use cookies.
+        <a href="http://youtu.be/dQw4w9WgXcQ">Terms of Conditions and Privacy Policy</a>
+    </p>
+</div>
+
+<script src="/admin.js"></script>
+
+<script src="/script.js"></script>
+
+</body>
+</html>

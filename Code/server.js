@@ -6,12 +6,14 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
+app.set('view engine', 'ejs');
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Serve public folder
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Database
 const db = new sqlite3.Database('./app.db');
@@ -38,6 +40,28 @@ db.serialize(() => {
     `);
 });
 
+// ---------- Routes for public views --------
+app.get('/', (req, res) => {
+    db.all("SELECT * FROM pets", [], (err, pets) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('index', { pets });
+    });
+});
+
+app.get('/favorites', (req, res) => {
+    db.all("SELECT * FROM books", [], (err, books) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('favorites', { books });
+    });
+});
+
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+app.get('/admin', (req, res) => {
+    res.render('admin');
+});
 
 // ---------- PET ROUTES ----------
 
@@ -122,6 +146,29 @@ app.delete('/api/books/:id', (req, res) => {
         [req.params.id],
         () => res.json({ deleted: true })
     );
+});
+
+// View routes
+app.get('/', (req, res) => {
+    db.all("SELECT * FROM pets", [], (err, pets) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('index', { pets });
+    });
+});
+
+app.get('/favorites', (req, res) => {
+    db.all("SELECT * FROM books", [], (err, books) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('favorites', { books });
+    });
+});
+
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+app.get('/admin', (req, res) => {
+    res.render('admin');
 });
 
 app.listen(PORT, () => {
