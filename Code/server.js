@@ -7,7 +7,6 @@ const app = express();
 const PORT = 3000;
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,6 +40,28 @@ db.serialize(() => {
     `);
 });
 
+// ---------- Routes for public views --------
+app.get('/', (req, res) => {
+    db.all("SELECT * FROM pets", [], (err, pets) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('index', { pets });
+    });
+});
+
+app.get('/favorites', (req, res) => {
+    db.all("SELECT * FROM books", [], (err, books) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('favorites', { books });
+    });
+});
+
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+app.get('/admin', (req, res) => {
+    res.render('admin');
+});
 
 // ---------- PET ROUTES ----------
 
