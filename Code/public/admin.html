@@ -152,6 +152,20 @@
         alert('Book updated successfully!');
     }
 
+    async function updatePet(id) {
+        const name = document.getElementById(`p-name-${id}`).value;
+        const image = document.getElementById(`p-img-${id}`).value;
+
+
+        await fetch(`/api/pets/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, image })
+        });
+
+        alert('Pet updated successfully!');
+    }
+
     async function deleteBook(id) {
         await fetch(`/api/books/${id}`, { method: 'DELETE' });
         loadBooks();
