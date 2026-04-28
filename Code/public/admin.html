@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>First Project</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<div class="header">
+    <a class="navbar home icon" href="index.html"><img alt="C"></a>
+    <a class="navbar" href="index.html">Home</a>
+    <a class="navbar" href="favorites.html">Favorites</a>
+    <a class="navbar disabled" href="#">Projects</a>
+    <a class="navbar" href="contact.html">Contact</a>
+    <a class="navbar current" href="admin.html">Admin</a>
+</div>
+
+<div class="page">
+
+<h1>Admin Page</h1>
+
+<p>
+    This page is for administrative purposes. It is not intended for public use.
+</p>
+
+<form id="addBookForm">
+    <h2> Add a Book</h2>
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title" required><br>
+    <label for="author">Author:</label><br>
+    <input type="text" id="author" name="author" required><br>
+    <label for="book_description">Description:</label><br>
+    <textarea id="book_description" name="description" required></textarea><br>
+    <label for="book_image">Image Filename (in images folder):</label><br>
+    <input type="text" id="book_image" name="image" required><br>
+    <label for="link">Link to Book (optional):</label><br>
+    <input type="text" id="link" name="link"><br><br>
+    <input type="submit" value="Add Book">
+</form>
+
+<h2>Existing Books</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Link</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="booksTable"></tbody>
+</table>
+
+<hr>
+
+<form id="addPetForm">
+    <h2> Add a Pet</h2>
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br>
+    <label for="pet_image">Image Filename (in images folder):</label><br>
+    <input type="text" id="pet_image" name="image" required><br><br>
+    <input type="submit" value="Add Pet">
+</form>
+
+
+<h2>Existing Pets</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="petsTable"></tbody>
+</table>
+
+<div class="bottom">
+    <p>
+        Copyright 2025.
+        This website does not use cookies.
+        <a href="http://youtu.be/dQw4w9WgXcQ">Terms of Conditions and Privacy Policy</a>
+    </p>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+
+    async function loadBooks() {
+        const res = await fetch('/api/books');
+        const books = await res.json();
+
+        const table = document.getElementById('booksTable');
+        table.innerHTML = '';
+
+        books.forEach(b => {
+            table.innerHTML += `
+            <tr>
+                <td><input id="b-title-${b.id}" value="${b.title}"></td>
+                <td><input id="b-author-${b.id}" value="${b.author}"></td>
+                <td><input id="b-desc-${b.id}" value="${b.description || ''}"></td>
+                <td><input id="b-img-${b.id}" value="${b.image}"></td>
+                <td><input id="b-link-${b.id}" value="${b.link || ''}"></td>
+                <td>
+                    <button onclick="updateBook(${b.id})">Update</button>
+                    <button onclick="deleteBook(${b.id})">Delete</button>
+                </td>
+            </tr>
+            `;
+        });
+    }
+
+    async function loadPets() {
+        const res = await fetch('/api/pets');
+        const pets = await res.json();
+
+        const table = document.getElementById('petsTable');
+        table.innerHTML = '';
+
+        pets.forEach(p => {
+            table.innerHTML += `
+            <tr>
+                <td><input id="p-name-${p.id}" value="${p.name}"></td>
+                <td><input id="p-img-${p.id}" value="${p.image}"></td>
+                <td>
+                    <button onclick="updatePet(${p.id})">Update</button>
+                    <button onclick="deletePet(${p.id})">Delete</button>
+                </td>
+            </tr>
+            `;
+        });
+    }
+
+    async function updateBook(id) {
+        const title = document.getElementById(`b-title-${id}`).value;
+        const author = document.getElementById(`b-author-${id}`).value;
+        const description = document.getElementById(`b-desc-${id}`).value;
+        const image = document.getElementById(`b-img-${id}`).value;
+        const link = document.getElementById(`b-link-${id}`).value;
+
+        await fetch(`/api/books/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, author, description, image, link })
+        });
+
+        alert('Book updated successfully!');
+    }
+
+    async function deleteBook(id) {
+        await fetch(`/api/books/${id}`, { method: 'DELETE' });
+        loadBooks();
+    }
+
+    async function deletePet(id) {
+        await fetch(`/api/pets/${id}`, { method: 'DELETE' });
+        loadPets();
+    }
+
+    document.getElementById('addBookForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const description = document.getElementById('book_description').value;
+        const image = document.getElementById('book_image').value;
+        const link = document.getElementById('link').value;
+
+        await fetch('/api/books', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, author, description, image, link })
+        });
+
+        alert('Book added successfully!');
+        loadBooks();
+    });
+
+    document.getElementById('addPetForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const image = document.getElementById('pet_image').value;
+
+        await fetch('/api/pets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, image })
+        });
+
+        alert('Pet added successfully!');
+        loadPets();
+    });
+
+    loadBooks();
+    loadPets();
+</script>
+
+</body>
+</html>
