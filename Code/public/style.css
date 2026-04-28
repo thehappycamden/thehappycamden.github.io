@@ -41,6 +41,7 @@
     cursor: not-allowed;
     color: grey;
 }
+
 .navbar.disabled:active {
     background-color: black;
     color: red;
