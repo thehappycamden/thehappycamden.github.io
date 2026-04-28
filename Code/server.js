@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 // Database
-const db = new sqlite3.Database('./pets.db');
+const db = new sqlite3.Database('./app.db');
 
 // Create tables
 db.serialize(() => {
@@ -22,8 +22,6 @@ db.serialize(() => {
         CREATE TABLE IF NOT EXISTS pets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            type TEXT,
-            description TEXT,
             image TEXT
         )
     `);
@@ -33,7 +31,9 @@ db.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             author TEXT,
-            image TEXT
+            description TEXT,
+            image TEXT,
+            link TEXT
         )
     `);
 });
@@ -50,11 +50,11 @@ app.get('/api/pets', (req, res) => {
 
 // Add pet
 app.post('/api/pets', (req, res) => {
-    const { name, type, description, image } = req.body;
+    const { name,  image } = req.body;
 
     db.run(
-        `INSERT INTO pets(name,type,description,image) VALUES(?,?,?,?)`,
-        [name, type, description, image],
+        `INSERT INTO pets(name,image) VALUES(?,?)`,
+        [name, image],
         function(err) {
             res.json({ id: this.lastID });
         }
@@ -66,8 +66,8 @@ app.put('/api/pets/:id', (req, res) => {
     const { name, type, description, image } = req.body;
 
     db.run(
-        `UPDATE pets SET name=?, type=?, description=?, image=? WHERE id=?`,
-        [name, type, description, image, req.params.id],
+        `UPDATE pets SET name=?, image=? WHERE id=?`,
+        [name, image, req.params.id],
         () => res.json({ updated: true })
     );
 });
@@ -93,11 +93,11 @@ app.get('/api/books', (req, res) => {
 
 // Add book
 app.post('/api/books', (req, res) => {
-    const { title, author, image } = req.body;
+    const { title, author, description, image, link } = req.body;
 
     db.run(
-        `INSERT INTO books(title,author,image) VALUES(?,?,?)`,
-        [title, author, image],
+        `INSERT INTO books(title,author,description,image,link) VALUES(?,?,?,?,?)`,
+        [title, author, description, image, link],
         function(err) {
             res.json({ id: this.lastID });
         }
@@ -106,11 +106,11 @@ app.post('/api/books', (req, res) => {
 
 // Update book
 app.put('/api/books/:id', (req, res) => {
-    const { title, author, image } = req.body;
+    const { title, author, description, image, link } = req.body;
 
     db.run(
-        `UPDATE books SET title=?, author=?, image=? WHERE id=?`,
-        [title, author, image, req.params.id],
+        `UPDATE books SET title=?, author=?, description=?, image=?, link=? WHERE id=?`,
+        [title, author, description, image, link, req.params.id],
         () => res.json({ updated: true })
     );
 });
